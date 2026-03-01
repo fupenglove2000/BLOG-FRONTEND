@@ -1,5 +1,5 @@
 import { RouterProvider } from 'react-router';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import { AuthProvider } from '@/contexts/AuthContext';
 import router from '@/router';
 
@@ -13,9 +13,11 @@ export default function App() {
         },
       }}
     >
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <AntdApp>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </AntdApp>
     </ConfigProvider>
   );
 }
