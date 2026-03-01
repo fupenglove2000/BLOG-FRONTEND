@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Post, PostListParams } from '@/types/post';
 import { getPosts } from '@/api/posts';
 
@@ -7,18 +7,22 @@ export function usePosts(initialParams?: PostListParams) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // We useRef to keep track of the initial parameters to avoid it causing re-renders
+  // if an object literal is passed into the hook.
+  const paramsRef = useRef(initialParams);
+
   const fetchPosts = useCallback(async (params?: PostListParams) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getPosts(params ?? initialParams);
+      const data = await getPosts(params ?? paramsRef.current);
       setPosts(data);
     } catch {
       setError('Failed to load posts');
     } finally {
       setLoading(false);
     }
-  }, [initialParams]);
+  }, []);
 
   useEffect(() => {
     fetchPosts();
